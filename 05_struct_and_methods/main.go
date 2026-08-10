@@ -410,3 +410,146 @@ func main() {
 	account.CheckBalance()
 
 }
+
+/// Practice Code 
+
+package main 
+import "fmt"
+
+type User struct { 
+	Name string
+}
+
+func (u User) ChangeName(){
+	u.Name = "Rahul"
+
+}
+
+func main(){
+	user := User {
+		Name : "Samir",
+	}
+	user.ChangeName()
+	fmt.Println(user.Name) // Samir
+}
+
+/*
+wait , we changes name to Rahul, why did not change ? 
+inside func (u User) ChangeName()
+
+u is not the original user
+it is copy
+
+// But how to change ? 
+use a pointer 
+
+*/
+
+package main
+import "fmt"
+
+type User struct { 
+	Name string
+}
+
+func (u *User) ChangeName(){
+	u.Name = "Rahul"
+}
+
+
+func main(){
+	user := User {
+		Name : "Samir"
+	}
+	user.ChangeName()
+	fmt.Println(user.Name) // "Rahul "
+}
+
+
+///++++++++++ Real Backend Examples 
+// let say u r building a bank application 
+// Balance = 10,000
+// user deposit = 5,000
+
+// WRONG WAY
+
+package main
+import "fmt"
+
+type BankAccount struct {
+	Balance int
+}
+
+func (b BankAccount) Deposit(amount int){
+	b.Balance += amount
+}
+
+func main(){
+	account := BankAccount{
+		Balance : 10000,
+	}
+
+	account.Deposit(50000)
+	fmt.Println(account.Balance) // 10000
+	// money was not added
+
+}
+
+//////  CORRECT WAY
+
+package main
+import "fmt"
+
+type BankAccount struct {
+	Balance int
+}
+
+func (b *BankAccount) Deposit(ammount int) {
+	b.Balance += amount
+
+}
+
+func main(){
+	account := BankAccount {
+		Balance : 10000,
+	}
+	account.Deposit(5000)
+	fmt.Println(account.Balance) // 15000
+
+}
+
+
+
+// Student Examples 
+
+type Student struct {
+	Name string
+	CGPA float64
+}
+
+func (s *Student) UpdateCGPA(newCGPA float64) {
+	s.CGPA = newCGPA
+}
+
+func main(){
+	student := Student{
+		Name : "Samir",
+		CGPA : 9.8,
+	}
+	student.UpdateCGPA(9.1)
+	fmt.Println(student.CGPA)
+}
+
+/*
+Rule Used by Go Developers ⭐⭐⭐⭐⭐
+
+If your struct is large or your method modifies it, 
+use a pointer receiver.
+
+In real-world Go backend projects, you'll notice that 
+most methods use pointer receivers by default. 
+They avoid unnecessary copying and allow methods to 
+update the original object.
+
+
+*/
